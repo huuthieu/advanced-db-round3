@@ -22,7 +22,9 @@ except:
     print("Could not connect to MongoDB")
 
 ## import routes
-import applicant    
+import applicant
+import company 
+import job   
 
 # define get method
 @app.route("/", methods=["GET"])

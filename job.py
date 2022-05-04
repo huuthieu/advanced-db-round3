@@ -9,7 +9,7 @@ from utils import *
 from __main__ import app, db
 
 @app.route("/job", methods = ["POST"])
-def _create():
+def _create_job():
     try:
         job = job_info(request)
         
@@ -29,9 +29,9 @@ def _create():
         )
 
 @app.route("/job/<id>", methods = ["GET"])
-def _get(id):
+def _get_job(id):
     try:    
-        job = db.jobs.find_one({"job_id": id})
+        job = db.jobs.find_one({"jobid": id})
         return Response(
             response=json_util.dumps(job),
             status=200
@@ -46,12 +46,12 @@ def _get(id):
         )
 
 @app.route("/job/<id>", methods = ["PUT"])
-def _update(id):
+def _update_job(id):
     try:
         job = job_info(request)
         job = {u:v for u, v in job.items() if v is not False}
         dbResponse = db.jobs.update_one(
-            {"job_id": id},
+            {"jobid": id},
             {"$set": job}
         )
         return Response(
@@ -68,9 +68,9 @@ def _update(id):
         )
 
 @app.route("/job/<id>", methods = ["DELETE"])
-def _delete(id):
+def _delete_job(id):
     try:
-        dbResponse = db.jobs.delete_one({"job_id": id})
+        dbResponse = db.jobs.delete_one({"jobid": id})
         return Response(
             response=json.dumps({"message":"Job deleted successfully"}),
             status=500

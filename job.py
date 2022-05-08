@@ -28,6 +28,26 @@ def _create_job():
             status=500
         )
 
+@app.route("/job", methods = ["GET"])
+def _get_all_job():
+    try:
+        jobs = db.jobs.find()
+        jobs = [json_util.dumps(job) for job in list(jobs)]
+        return Response(
+            response=json.dumps({"message":"Jobs retrieved successfully",
+            "jobs":jobs}),
+            status=200
+        )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error retrieving jobs"}),
+            status=500
+        )
+
+
 @app.route("/job/<id>", methods = ["GET"])
 def _get_job(id):
     try:    

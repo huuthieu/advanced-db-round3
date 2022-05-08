@@ -30,6 +30,27 @@ def _create_user():
             status=500
         )
 
+
+@app.route("/applicant", methods = ["GET"])
+def _get_all_applicant():
+    try:
+        applicants = db.users.find()
+        applicants = [json_util.dumps(applicant) for applicant in list(applicants)]
+        print(applicants)
+        return Response(
+            response=json.dumps({"message":"Applicants retrieved successfully",
+            "applicants":applicants}),
+            status=200
+        )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error retrieving applicants"}),
+            status=500
+        )
+
 @app.route("/applicant/<id>", methods = ["GET"])
 def _get_user(id):
     try:

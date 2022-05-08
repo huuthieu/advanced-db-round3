@@ -28,7 +28,7 @@ def _create():
             response=json.dumps({"message":"Error creating company"}),
             status=500
         )
-    
+
 @app.route("/company/<id>", methods = ["GET"])
 def _get(id):
     try:    
@@ -43,6 +43,26 @@ def _get(id):
         print('********')
         return Response(
             response=json.dumps({"message":"Error getting company"}),
+            status=500
+        )
+
+@app.route("/applicant", methods = ["GET"])
+def _get_all_company():
+    try:
+        companies = db.companies.find()
+        companies = [json_util.dumps(companies) for applicant in list(companies)]
+        print(companies)
+        return Response(
+            response=json.dumps({"message":"Companies retrieved successfully",
+            "applicants":companies}),
+            status=200
+        )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error retrieving companies"}),
             status=500
         )
 

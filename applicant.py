@@ -30,6 +30,33 @@ def _create_user():
             status=500
         )
 
+@app.route("/applicant_check", methods = ["POST"])
+def _check_user():
+    try:
+        username = request.form['USERNAME']
+        password = request.form['PASS']
+        applicant = db.users.find_one({"USERNAME": username, "PASS": password})
+        if applicant:
+            return Response(
+                response=json.dumps({"message":"Applicant found",
+                "id": str(applicant['_id'])}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Applicant not found",
+                "id": "False"}),
+                status=200
+            )
+
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')    
+        return Response(
+            response=json.dumps({"message":"Error checking applicant"}),
+            status=500
+        )
 
 @app.route("/applicant", methods = ["GET"])
 def _get_all_applicant():
@@ -73,8 +100,9 @@ def _update_user(id):
     try:
         applicant = applicant_info(request)
         applicant = {u:v for u, v in applicant.items() if v is not False}
+        print(applicant)
         dbResponse = db.users.update_one(
-            {"applicant_id": id},
+            {"APPLICANTID": id},
             {"$set": applicant}
         )
         return Response(
@@ -93,7 +121,7 @@ def _update_user(id):
 @app.route("/applicant/<id>", methods = ["DELETE"])
 def _delete_user(id):
     try:
-        dbResponse = db.users.delete_one({"applicant_id": id})
+        dbResponse = db.users.delete_one({"APPLICANTID": id})
         return Response(
             response=json.dumps({"message":"Applicant deleted successfully"}),
             status=200

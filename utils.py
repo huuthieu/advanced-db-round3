@@ -6,7 +6,7 @@ import json
 
 def applicant_info(request):
     data = {
-        "applicantid": request.form.get("APPLICANTID", False),
+        "APPLICANTID": request.form.get("APPLICANTID", False),
         "FNAME": request.form.get("FNAME", False),
         "LNAME": request.form.get("LNAME", False),
         "MNAME": request.form.get("MNAME", False),

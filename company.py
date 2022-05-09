@@ -32,7 +32,7 @@ def _create():
 @app.route("/company/<id>", methods = ["GET"])
 def _get(id):
     try:    
-        company = db.companies.find_one({"companyid": id})
+        company = db.companies.find_one({"COMPANYID": id})
         return Response(
             response=json_util.dumps(company),
             status=200
@@ -54,7 +54,7 @@ def _get_all_company():
         print(companies)
         return Response(
             response=json.dumps({"message":"Companies retrieved successfully",
-            "applicants":companies}),
+            "companies":companies}),
             status=200
         )
     except Exception as e:
@@ -74,7 +74,7 @@ def _update(id):
         company = {u:v for u, v in company.items() if v is not False}
         
         dbResponse = db.companies.update_one(
-            {"companyid": id},
+            {"COMPANYID": id},
             {"$set": company}
         )
         return Response(
@@ -93,7 +93,7 @@ def _update(id):
 @app.route("/company/<id>", methods = ["DELETE"])
 def _delete(id):
     try:
-        dbResponse = db.companies.delete_one({"companyid": id})
+        dbResponse = db.companies.delete_one({"COMPANYID": id})
         return Response(
             response=json.dumps({"message":"Company deleted successfully"}),
             status=200

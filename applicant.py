@@ -39,7 +39,7 @@ def _check_user():
         if applicant:
             return Response(
                 response=json.dumps({"message":"Applicant found",
-                "id": str(applicant['_id'])}),
+                "id": str(applicant['APPLICANTID'])}),
                 status=200
             )
         else:
@@ -81,7 +81,7 @@ def _get_all_applicant():
 @app.route("/applicant/<id>", methods = ["GET"])
 def _get_user(id):
     try:
-        applicant = db.users.find_one({"applicant_id": id})
+        applicant = db.users.find_one({"APPLICANTID": id})
         return Response(
             response=json_util.dumps(applicant),
             status=200

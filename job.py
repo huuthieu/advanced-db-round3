@@ -51,7 +51,7 @@ def _get_all_job():
 @app.route("/job/<id>", methods = ["GET"])
 def _get_job(id):
     try:    
-        job = db.jobs.find_one({"jobid": id})
+        job = db.jobs.find_one({"JOBID": id})
         return Response(
             response=json_util.dumps(job),
             status=200
@@ -71,7 +71,7 @@ def _update_job(id):
         job = job_info(request)
         job = {u:v for u, v in job.items() if v is not False}
         dbResponse = db.jobs.update_one(
-            {"jobid": id},
+            {"JOBID": id},
             {"$set": job}
         )
         return Response(
@@ -90,7 +90,7 @@ def _update_job(id):
 @app.route("/job/<id>", methods = ["DELETE"])
 def _delete_job(id):
     try:
-        dbResponse = db.jobs.delete_one({"jobid": id})
+        dbResponse = db.jobs.delete_one({"JOBID": id})
         return Response(
             response=json.dumps({"message":"Job deleted successfully"}),
             status=500

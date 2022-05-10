@@ -1,10 +1,4 @@
-from flask import Flask, request, jsonify,Response
-from werkzeug.utils import secure_filename
-from flask_cors import CORS, cross_origin
-import json
-from pymongo import MongoClient
-from bson import json_util
-from werkzeug.contrib.fixers import ProxyFix
+from calendar import c
 from utils import *
 from __main__ import app, db
 
@@ -12,13 +6,14 @@ from __main__ import app, db
 def _create_job():
     try:
         job = job_info(request)
+        job["DATE_posted"] = datetime.utcnow()
+        company_id = job["COMPANYID"]
         
-        dbResponse = db.jobs.insert_one(job)
+        dbResponse = db.companies.update_one({"COMPANYID": company_id}, {"$push": {"JOB": job}})
         return Response(
             status=200,
-            response=json.dumps({"message":"Job created successfully",
-            "id": str(dbResponse.inserted_id)})
-        )
+            response=json.dumps({"message":"Job created successfully"}
+        ))
     except Exception as e:
         print('********')
         print(e)
@@ -31,8 +26,9 @@ def _create_job():
 @app.route("/job", methods = ["GET"])
 def _get_all_job():
     try:
-        jobs = db.jobs.find()
+        jobs = db.companies.find({},{"JOB":1})
         jobs = [json_util.dumps(job) for job in list(jobs)]
+        print(jobs)
         return Response(
             response=json.dumps({"message":"Jobs retrieved successfully",
             "jobs":jobs}),
@@ -51,7 +47,8 @@ def _get_all_job():
 @app.route("/job/<id>", methods = ["GET"])
 def _get_job(id):
     try:    
-        job = db.jobs.find_one({"JOBID": id})
+        print(id)
+        job = db.companies.find_one({"JOB.JOBID": id},{"JOB.$":1})
         return Response(
             response=json_util.dumps(job),
             status=200
@@ -70,13 +67,12 @@ def _update_job(id):
     try:
         job = job_info(request)
         job = {u:v for u, v in job.items() if v is not False}
-        dbResponse = db.jobs.update_one(
-            {"JOBID": id},
-            {"$set": job}
-        )
+        job["Date_update"] = datetime.utcnow()
+        for k,v in job.items():
+            db.companies.update_one({"JOB.JOBID": id}, {"$set": {"JOB."+k: v}})
         return Response(
-            response=json.dumps({"message":"Job updated successfully"}),
-            status=500
+            status=200,
+            response=json.dumps({"message":"Job updated successfully"})
         )
     except Exception as e:
         print('********')
@@ -90,10 +86,10 @@ def _update_job(id):
 @app.route("/job/<id>", methods = ["DELETE"])
 def _delete_job(id):
     try:
-        dbResponse = db.jobs.delete_one({"JOBID": id})
+        db.companies.update_one({"JOB.JOBID": id}, {"$pull": {"JOB": {"JOBID": id}}})
         return Response(
-            response=json.dumps({"message":"Job deleted successfully"}),
-            status=500
+            status=200,
+            response=json.dumps({"message":"Job deleted successfully"})
         )
     except Exception as e:
         print('********')

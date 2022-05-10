@@ -1,11 +1,4 @@
 
-from flask import Flask, request, jsonify,Response
-from werkzeug.utils import secure_filename
-from flask_cors import CORS, cross_origin
-import json
-from pymongo import MongoClient
-from bson import json_util
-from werkzeug.contrib.fixers import ProxyFix
 from utils import *
 from __main__ import app, db
 
@@ -14,8 +7,9 @@ def _create_user():
     try:
         applicant = applicant_info(request)
         print(applicant)
-        
+        applicant['DATE_CREATE'] = datetime.utcnow()
         dbResponse = db.users.insert_one(applicant)
+
         return Response(
             status=200,
             response=json.dumps({"message":"Applicant created successfully",
@@ -100,6 +94,7 @@ def _update_user(id):
     try:
         applicant = applicant_info(request)
         applicant = {u:v for u, v in applicant.items() if v is not False}
+        applicant['DATE_UPDATE'] = datetime.utcnow()
         print(applicant)
         dbResponse = db.users.update_one(
             {"APPLICANTID": id},

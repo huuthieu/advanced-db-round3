@@ -25,6 +25,8 @@ except:
 import applicant
 import company 
 import job   
+import tblapplicant_more
+
 
 # define get method
 @app.route("/", methods=["GET"])

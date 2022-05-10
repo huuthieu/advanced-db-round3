@@ -1,10 +1,3 @@
-from flask import Flask, request, jsonify,Response
-from werkzeug.utils import secure_filename
-from flask_cors import CORS, cross_origin
-import json
-from pymongo import MongoClient
-from bson import json_util
-from werkzeug.contrib.fixers import ProxyFix
 from utils import *
 from __main__ import app, db
 
@@ -13,6 +6,7 @@ def _create():
     try:
         company = company_info(request)
         print(company)
+        company['DATECREATE'] = datetime.utcnow()
         
         dbResponse = db.companies.insert_one(company)
         return Response(
@@ -72,6 +66,7 @@ def _update(id):
         company = company_info(request)
         print(company)
         company = {u:v for u, v in company.items() if v is not False}
+        company['DATEUPDATE'] = datetime.utcnow()
         
         dbResponse = db.companies.update_one(
             {"COMPANYID": id},

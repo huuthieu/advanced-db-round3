@@ -1,10 +1,3 @@
-from flask import Flask, request, jsonify,Response
-# from werkzeug.utils import secure_filename
-# from flask_cors import CORS, cross_origin
-import json
-# from pymongo import MongoClient
-from bson import json_util
-# from werkzeug.contrib.fixers import ProxyFix
 from utils import *
 from __main__ import app, db
 
@@ -618,7 +611,7 @@ def _delete_jobregistration(jobregistration_id):
 
 ## users
 @app.route("/users", methods = ["POST"])
-def _create_user():
+def _create_appl_user():
     try:
         user = user_info(request)
         db.users.update_one({"USER": user["USER"]}, {"$set": {"USER": user}})
@@ -637,7 +630,7 @@ def _create_user():
         )
 
 @app.route("/users", methods = ["GET"])
-def _get_user():
+def _get_appl_user():
     try:
         user = db.users.find_one({"USER": {"$exists": True}}, {"USER": 1})
         user = [json_util.dumps(user) for user in list(user["USER"])]
@@ -663,7 +656,7 @@ def _get_user():
         )
 
 @app.route("/users/<user_id>", methods = ["PUT"])
-def _update_user(user_id):
+def _update_appl_user(user_id):
     try:
         user = user_info(request)
         user = {u:v for u, v in user.items() if v is not False}
@@ -684,7 +677,7 @@ def _update_user(user_id):
         )
 
 @app.route("/users/<user_id>", methods = ["DELETE"])
-def _delete_user(user_id):
+def _delete_appl_user(user_id):
     try:
         db.users.update_one({"USER": user_id}, {"$pull": {"USER": {"id": user_id}}})
         return Response(

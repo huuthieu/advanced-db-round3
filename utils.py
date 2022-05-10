@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from this import d
 from flask import Flask, request, jsonify,Response
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
@@ -74,3 +76,107 @@ def job_info(request):
     }
     return data
 
+def foreign_language_info(request):
+    data = {
+        "id": request.form.get("id", False),
+        "APPLICANTID": request.form.get("APPLICANTID", False),
+        "Foreign_lan": request.form.get("Foreign_lan", False),
+        "score": request.form.get("score", False),
+        "date_issue": request.form.get("date_issue", False)
+    }
+    return data
+
+
+def level_learn_info(request):
+    data = {
+        id: request.form.get("id", False),
+        "APPLICANTID": request.form.get("APPLICANTID", False),
+        "DEGREE": request.form.get("DEGREE", False),
+        "Start_date": request.form.get("Start_date", False),
+        "End_date": request.form.get("End_date", False),
+        "specialized": request.form.get("specialized", False),
+        "classification": request.form.get("classification", False)
+    }
+    return data
+
+def prefer_job_info(request):
+    data = {
+        "id": request.form.get("id", False),
+        "APPLICANTID": request.form.get("APPLICANTID", False),
+        "JOB": request.form.get("JOB", False),
+        "DEGREE": request.form.get("DEGREE", False),
+        "CATEGORY": request.form.get("CATEGORY", False),
+        "LOCATION": request.form.get("LOCATION", False),
+        "SALARY": request.form.get("SALARY", False),
+        "WORK_FORMAT": request.form.get("WORK_FORMAT", False),
+        "EXPERIENCE": request.form.get("EXPERIENCE", False)
+    }
+    return data
+
+def cv_info(request):
+    data = {
+        "id": request.form.get("id", False),
+        "APPLICANTID": request.form.get("APPLICANTID", False),
+        "CV_NAME": request.form.get("CV_NAME", False),
+        "DATE_POST": request.form.get("DATE_POST", False)
+    }
+    return data
+
+def attachmentfile_info(request):
+    data = {
+        "FIELDID": request.form.get("FIELDID", False),
+        "JOBID": request.form.get("JOBID", False),
+        "FILE_NAME": request.form.get("FILE_NAME", False),
+        "FILE_LOCATION": request.form.get("FILE_LOCATION", False),
+        "USERATTACHMENTID": request.form.get("USERATTACHMENTID", False)
+    }
+    return data
+
+def category_info(request):
+    data = {
+        "CATEGORYID": request.form.get("CATEGORYID", False),
+        "CATEGORY": request.form.get("CATEGORY", False),
+    }  
+    return data
+
+def jobregistration_info(request):
+    data = {
+        "REGISTRATIONID": request.form.get("REGISTRATIONID", False),
+        "COMPANYID": request.form.get("COMPANYID", False),
+        "JOBID": request.form.get("JOBID", False),
+        "APPLICANTID": request.form.get("APPLICANTID", False),
+        "REGISTRATIONDATE": request.form.get("REGISTRATIONDATE", False),
+        "REMARKS": request.form.get("REMARKS", False),
+        "FILEID": request.form.get("FILEID", False),
+        "PENDINGAPPLICATION": request.form.get("PENDINGAPPLICATION", False),
+        "HVIEW": request.form.get("HVIEW", False),
+        "applied_status": request.form.get("applied_status", False),
+        "CONTENT": request.form.get("CONTENT", False),
+        "Start_at": request.form.get("Start_at", False),
+        "End_at": request.form.get("End_at", False),
+        "Start_time": request.form.get("Start_time", False),
+        "End_time": request.form.get("End_time", False),
+        "DATETIMEAPPROVED": request.form.get("DATETIMEAPPROVED", False)
+    }
+    return data
+
+def user_info(request):
+    data = {
+        "USERID": request.form.get("USERID", False),
+        "FULLNAME": request.form.get("FULLNAME", False),
+        "USERNAME": request.form.get("USERNAME", False),
+        "PASS": request.form.get("PASS", False),
+        "ROLE": request.form.get("ROLE", False),
+        "PICLOCATION": request.form.get("PICLOCATION", False)
+    }
+    return data
+
+def skill_info(request):
+    data = {
+        "id": request.form.get("id", False),
+        "APPLICANTID": request.form.get("APPLICANTID", False),
+        "Skill": request.form.get("Skill", False),
+        "desc_skill": request.form.get("desc_skill", False),
+        "level": request.form.get("level", False)
+    }
+    

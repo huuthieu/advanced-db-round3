@@ -69,7 +69,7 @@ def _update_job(id):
         job = {u:v for u, v in job.items() if v is not False}
         job["Date_update"] = datetime.utcnow()
         for k,v in job.items():
-            db.companies.update_one({"JOB.JOBID": id}, {"$set": {"JOB."+k: v}})
+            db.companies.update_one({"JOB.JOBID": id}, {"$set": {"JOB.$."+k: v}})
         return Response(
             status=200,
             response=json.dumps({"message":"Job updated successfully"})

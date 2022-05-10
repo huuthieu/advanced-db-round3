@@ -459,10 +459,10 @@ def _create_category():
             status=500
         )
 
-@app.route("/category", methods = ["GET"])
-def _get_category():
+@app.route("/category/<applicant_id>", methods = ["GET"])
+def _get_category(applicant_id):
     try:
-        category = db.users.find_one({"CATEGORY": {"$exists": True}}, {"CATEGORY": 1})
+        category = db.users.find_one({"APPLICANTID": applicant_id}, {"CATEGORY": 1})
         category = [json_util.dumps(category) for category in list(category["CATEGORY"])]
         if category:    
             return Response(
@@ -544,10 +544,10 @@ def _create_jobregistration():
             status=500
         )
 
-@app.route("/jobregistration", methods = ["GET"])
-def _get_jobregistration():
+@app.route("/jobregistration/<applicant_id>", methods = ["GET"])
+def _get_jobregistration(applicant_id):
     try:
-        jobregistration = db.users.find_one({"JOBREGISTRATION": {"$exists": True}}, {"JOBREGISTRATION": 1})
+        jobregistration = db.users.find_one({"APPLICANTID": applicant_id}, {"JOBREGISTRATION": 1})
         jobregistration = [json_util.dumps(jobregistration) for jobregistration in list(jobregistration["JOBREGISTRATION"])]
         if jobregistration:
             return Response(
@@ -629,10 +629,10 @@ def _create_appl_user():
             status=500
         )
 
-@app.route("/users", methods = ["GET"])
-def _get_appl_user():
+@app.route("/users/<applicant_id>", methods = ["GET"])
+def _get_appl_user(applicant_id):
     try:
-        user = db.users.find_one({"USER": {"$exists": True}}, {"USER": 1})
+        user = db.users.find_one({"APPLICANTID": applicant_id}, {"USER": 1})
         user = [json_util.dumps(user) for user in list(user["USER"])]
         if user:
             return Response(
@@ -714,10 +714,10 @@ def _create_skill():
             status=500
         )
 
-@app.route("/skills", methods = ["GET"])
-def _get_skill():
+@app.route("/skills/<applicant_id>", methods = ["GET"])
+def _get_skill(applicant_id):
     try:
-        skill = db.users.find_one({"SKILL": {"$exists": True}}, {"SKILL": 1})
+        skill = db.users.find_one({"APPLICANTID": applicant_id}, {"SKILL": 1})
         skill = [json_util.dumps(skill) for skill in list(skill["SKILL"])]
         if skill:
             return Response(

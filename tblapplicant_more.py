@@ -444,11 +444,12 @@ def _delete_applicant_attachmentfile(attachmentfile_id):
 def _create_category():
     try:
         category = category_info(request)
-        db.users.update_one({"CATEGORY": category["CATEGORY"]}, {"$set": {"CATEGORY": category}})
+        applicant_id = category['APPLICANTID']
+        db.users.update_one({"APPLICANTID": applicant_id}, {"$push": {"CATEGORY": category}})
         return Response(
             status=200,
             response=json.dumps({"message":"Category created successfully",
-            "category": category["CATEGORY"]})
+            "id": str(applicant_id)})
         )
     except Exception as e:
         print('********')
@@ -491,7 +492,7 @@ def _update_category(category_id):
         category = category_info(request)
         category = {u:v for u, v in category.items() if v is not False}
         for k, v in category.items():
-            db.users.update_one({"CATEGORY": category_id}, {"$set": {"CATEGORY.$."+k: v}})
+            db.users.update_one({"CATEGORY.id": category_id}, {"$set": {"CATEGORY.$."+k: v}})
         return Response(
             response=json.dumps({"message":"Category updated successfully",
             "id": str(category_id)}),
@@ -509,7 +510,7 @@ def _update_category(category_id):
 @app.route("/category/<category_id>", methods = ["DELETE"])
 def _delete_category(category_id):
     try:
-        db.users.update_one({"CATEGORY": category_id}, {"$pull": {"CATEGORY": {"id": category_id}}})
+        db.users.update_one({"CATEGORY.id": category_id}, {"$pull": {"CATEGORY": {"id": category_id}}})
         return Response(
             response=json.dumps({"message":"Category deleted successfully",
             "id": str(category_id)}),
@@ -529,7 +530,8 @@ def _delete_category(category_id):
 def _create_jobregistration():
     try:
         jobregistration = jobregistration_info(request)
-        db.users.update_one({"JOBREGISTRATION": jobregistration["JOBREGISTRATION"]}, {"$set": {"JOBREGISTRATION": jobregistration}})
+        applicant_id = jobregistration['APPLICANTID']
+        db.users.update_one({"APPLICANTID": applicant_id}, {"$push": {"JOBREGISTRATION": jobregistration}})
         return Response(
             status=200,
             response=json.dumps({"message":"Jobregistration created successfully",
@@ -576,7 +578,7 @@ def _update_jobregistration(jobregistration_id):
         jobregistration = jobregistration_info(request)
         jobregistration = {u:v for u, v in jobregistration.items() if v is not False}
         for k, v in jobregistration.items():
-            db.users.update_one({"JOBREGISTRATION": jobregistration_id}, {"$set": {"JOBREGISTRATION.$."+k: v}})
+            db.users.update_one({"JOBREGISTRATION.id": jobregistration_id}, {"$set": {"JOBREGISTRATION.$."+k: v}})
         return Response(
             response=json.dumps({"message":"Jobregistration updated successfully",
             "id": str(jobregistration_id)}),
@@ -594,7 +596,7 @@ def _update_jobregistration(jobregistration_id):
 @app.route("/jobregistration/<jobregistration_id>", methods = ["DELETE"])
 def _delete_jobregistration(jobregistration_id):
     try:
-        db.users.update_one({"JOBREGISTRATION": jobregistration_id}, {"$pull": {"JOBREGISTRATION": {"id": jobregistration_id}}})
+        db.users.update_one({"JOBREGISTRATION.id": jobregistration_id}, {"$pull": {"JOBREGISTRATION": {"id": jobregistration_id}}})
         return Response(
             response=json.dumps({"message":"Jobregistration deleted successfully",
             "id": str(jobregistration_id)}),
@@ -614,11 +616,12 @@ def _delete_jobregistration(jobregistration_id):
 def _create_appl_user():
     try:
         user = user_info(request)
-        db.users.update_one({"USER": user["USER"]}, {"$set": {"USER": user}})
+        applicant_id = user['APPLICANTID']
+        db.users.update_one({"APPLICANTID": applicant_id}, {"$push": {"USER": user}})
         return Response(
             status=200,
             response=json.dumps({"message":"User created successfully",
-            "user": user["USER"]})
+            "id": str(applicant_id)})
         )
     except Exception as e:
         print('********')
@@ -661,7 +664,7 @@ def _update_appl_user(user_id):
         user = user_info(request)
         user = {u:v for u, v in user.items() if v is not False}
         for k, v in user.items():
-            db.users.update_one({"USER": user_id}, {"$set": {"USER.$."+k: v}})
+            db.users.update_one({"USER.id": user_id}, {"$set": {"USER.$."+k: v}})
         return Response(
             response=json.dumps({"message":"User updated successfully",
             "id": str(user_id)}),
@@ -679,7 +682,7 @@ def _update_appl_user(user_id):
 @app.route("/users/<user_id>", methods = ["DELETE"])
 def _delete_appl_user(user_id):
     try:
-        db.users.update_one({"USER": user_id}, {"$pull": {"USER": {"id": user_id}}})
+        db.users.update_one({"USER.id": user_id}, {"$pull": {"USER": {"id": user_id}}})
         return Response(
             response=json.dumps({"message":"User deleted successfully",
             "id": str(user_id)}),
@@ -699,11 +702,12 @@ def _delete_appl_user(user_id):
 def _create_skill():
     try:
         skill = skill_info(request)
-        db.users.update_one({"SKILL": skill["SKILL"]}, {"$set": {"SKILL": skill}})
+        applicant_id = skill['APPLICANTID']
+        db.users.update_one({'APPLICANTID':applicant_id}, {"$push": {"SKILL": skill}})
         return Response(
             status=200,
             response=json.dumps({"message":"Skill created successfully",
-            "skill": skill["SKILL"]})
+            "id": str(applicant_id)})
         )
     except Exception as e:
         print('********')
@@ -747,7 +751,7 @@ def _update_skill(skill_id):
 
         skill = {u:v for u, v in skill.items() if v is not False}
         for k, v in skill.items():
-            db.users.update_one({"SKILL": skill_id}, {"$set": {"SKILL.$."+k: v}})
+            db.users.update_one({"SKILL.id": skill_id}, {"$set": {"SKILL.$."+k: v}})
         return Response(
             response=json.dumps({"message":"Skill updated successfully",
             "id": str(skill_id)}),
@@ -765,7 +769,7 @@ def _update_skill(skill_id):
 @app.route("/skills/<skill_id>", methods = ["DELETE"])
 def _delete_skill(skill_id):
     try:
-        db.users.update_one({"SKILL": skill_id}, {"$pull": {"SKILL": {"id": skill_id}}})
+        db.users.update_one({"SKILL.id": skill_id}, {"$pull": {"SKILL": {"id": skill_id}}})
         return Response(
             response=json.dumps({"message":"Skill deleted successfully",
             "id": str(skill_id)}),

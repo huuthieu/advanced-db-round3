@@ -820,3 +820,92 @@ def _delete_skill(skill_id):
             status=500
         )
 
+### WORK_EXPERIENCE
+
+@app.route("/applicant_work_experience", methods = ["POST"])
+def _create_applicant_we():
+    try:
+        print(request.form)
+        applicant_we = work_experience_info(request)
+        applicant_id = applicant_we['APPLICANTID']
+        print(applicant_we)
+        db.users.update_one({"APPLICANTID": applicant_id}, {"$push": {"WORK_EXPERIENCE": applicant_we}})
+        return Response(
+            status=200,
+            response=json.dumps({"message":"Applicant work experience created successfully",
+            "id": str(applicant_we)})
+        )
+    except Exception as e:
+        print('******')
+        print(e)
+        print('******')
+        return Response(
+            response=json.dumps({"message":"Error creating applicant work experience"}),
+            status=500
+        )
+
+@app.route("/applicant_work_experience/<applicant_id>", methods = ["GET"])
+def _get_applicant_we(applicant_id):
+    try:
+        applicant_we = db.users.find_one({"APPLICANTID": applicant_id}, {"WORK_EXPERIENCE": 1})
+        applicant_we = [json_util.dumps(we) for we in list(applicant_we.get("WORK_EXPERIENCE",[]))]
+        if applicant_we:
+            return Response(
+                response=json.dumps({"message":"Applicant work experience found",
+                "applicant_we": applicant_we}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Applicant work experience not found",
+                "applicant_we": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('******')
+        print(e)
+        print('******')
+        return Response(
+            response=json.dumps({"message":"Error getting applicant work experience !"}),
+            status=500
+        )
+
+@app.route("/applicant_work_experience/<we_id>", methods = ["PUT"])
+def _update_applicant_we(we_id):
+    try:
+        applicant_we = work_experience_info(request)
+        applicant_we = {u:v for u, v in applicant_we.items() if v is not False}
+        for k, v in applicant_we.items():
+            db.users.update_one({"WORK_EXPERIENCE.id": we_id}, {"$set": {"WORK_EXPERIENCE.$."+k: v}})
+        return Response(
+            response=json.dumps({"message":"Applicant work experience updated successfully",
+            "id": str(we_id)}),
+            status=200
+        )
+
+    except Exception as e:
+        print('******')
+        print(e)
+        print('******')
+        return Response(
+            response=json.dumps({"message":"Error updating applicant work experience"}),
+            status=500
+        )
+
+@app.route("/applicant_work_experience/<we_id>", methods = ["DELETE"])
+def _delete_applicant_we(we_id):
+    try:
+        db.users.update_one({"WORK_EXPERIENCE.id": we_id}, {"$pull": {"WORK_EXPERIENCE": {"id": we_id}}})
+        return Response(
+            response=json.dumps({"message":"Applicant work experience deleted successfully",
+            "id": str(we_id)}),
+            status=200
+        )
+    except Exception as e:
+        print('******')
+        print(e)
+        print('******')
+        return Response(
+            response=json.dumps({"message":"Error deleting applicant work experience"}),
+            status=500
+        )

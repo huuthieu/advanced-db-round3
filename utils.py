@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 import json
 from datetime import datetime
+import time
 from pymongo import MongoClient
 from bson import json_util
 from werkzeug.contrib.fixers import ProxyFix
@@ -99,7 +100,8 @@ def level_learn_info(request):
         "Start_date": request.form.get("Start_date", False),
         "End_date": request.form.get("End_date", False),
         "specialized": request.form.get("specialized", False),
-        "classification": request.form.get("classification", False)
+        "classification": request.form.get("classification", False),
+        "SCHOOL": request.form.get("SCHOOL", False)
     }
     return data
 
@@ -185,3 +187,14 @@ def skill_info(request):
     }
     return data
     
+def work_experience_info(request):
+    data = {
+        "id": request.form.get("id", False),
+        "APPLICANTID": request.form.get("APPLICANTID", False),
+        "TITLE": request.form.get("TITLE", False),
+        "COMPANY": request.form.get("COMPANY", False),
+        "STARTDATE": request.form.get("STARTDATE", False),
+        "ENDDATE": request.form.get("ENDDATE", False),
+        "JOBDESCRIPTION": request.form.get("JOBDESCRIPTION", False)
+    }
+    return data

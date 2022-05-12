@@ -27,6 +27,7 @@ def _create_job():
 def _get_all_job():
     try:
         jobs = db.companies.find({},{"JOB":1})
+        jobs = [job for job in jobs if job["JOB"] != []]
         jobs = [json_util.dumps(job) for job in list(jobs)]
         print(jobs)
         return Response(

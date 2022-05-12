@@ -702,6 +702,10 @@ def _delete_appl_user(user_id):
 def _create_skill():
     try:
         skill = skill_info(request)
+        count = db.users.find({},{"SKILL": 1})
+        count = [json_util.dumps(count) for count in list(count)]
+        count = len(count)
+        skill['id'] = count+1
         applicant_id = skill['APPLICANTID']
         db.users.update_one({'APPLICANTID':applicant_id}, {"$push": {"SKILL": skill}})
         return Response(
@@ -721,12 +725,14 @@ def _create_skill():
 @app.route("/skills/<applicant_id>", methods = ["GET"])
 def _get_skill(applicant_id):
     try:
-        skill = db.users.find_one({"APPLICANTID": applicant_id}, {"SKILL": 1})
-        skill = [json_util.dumps(skill) for skill in list(skill["SKILL"])]
-        if skill:
+        skills = db.users.find_one({"APPLICANTID": applicant_id}, {"SKILL": 1})
+        
+        skills = [json_util.dumps(skill) for skill in list(skills["SKILL"])]
+        print(skills)
+        if skills:
             return Response(
                 response=json.dumps({"message":"Skill found",
-                "skill": skill}),
+                "skill": skills}),
                 status=200
             )
         else:
@@ -743,6 +749,35 @@ def _get_skill(applicant_id):
             response=json.dumps({"message":"Error getting skill"}),
             status=500
         )
+
+# @app.route("/skills/<applicant_id>", methods = ["GET"])
+# def _get_skill(applicant_id):
+#     try:
+#         skills = db.users.find_one({"APPLICANTID": applicant_id}, {"SKILL": 1})
+        
+#         skills = [json_util.dumps(skill) for skill in list(skills["SKILL"])]
+#         print(skills)
+#         if skills:
+#             return Response(
+#                 response=json.dumps({"message":"Skill found",
+#                 "skill": skills}),
+#                 status=200
+#             )
+#         else:
+#             return Response(
+#                 response=json.dumps({"message":"Skill not found",
+#                 "skill": "False"}),
+#                 status=200
+#             )
+#     except Exception as e:
+#         print('********')
+#         print(e)
+#         print('********')
+#         return Response(
+#             response=json.dumps({"message":"Error getting skill"}),
+#             status=500
+#         )
+
 
 @app.route("/skills/<skill_id>", methods = ["PUT"])
 def _update_skill(skill_id):
@@ -783,5 +818,4 @@ def _delete_skill(skill_id):
             response=json.dumps({"message":"Error deleting skill"}),
             status=500
         )
-
 

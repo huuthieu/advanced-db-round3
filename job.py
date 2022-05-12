@@ -28,10 +28,16 @@ def _get_all_job():
     try:
     # if True:
         jobs_list = []
-        jobs = db.companies.find({},{"JOB":1})
-        jobs = [job for job in jobs if job.get("JOB") != [] and job.get("JOB") != None]
+        companies = db.companies.find()
+        # companies = [json_util.dumps(company) for company in list(companies)]
+        # print(companies)
+        jobs = [job for job in companies if job.get("JOB") != [] and job.get("JOB") != None]
         for job in jobs:
-            jobs_list.extend(job["JOB"])
+            j_list = []
+            for j in job["JOB"]:
+                j["COMPANYNAME"] = job["COMPANYNAME"]
+                j_list.append(j)
+            jobs_list.append(j_list)
         # print(jobs_list)
         jobs_list = [json_util.dumps(job) for job in list(jobs_list)]
         return Response(

@@ -25,7 +25,8 @@ def _create_applicant_fl():
 def _get_applicant_fl(applicant_id):
     try:
         applicant_fl = db.users.find_one({"APPLICANTID": applicant_id}, {"FOREIGN_LANGUAGE": 1})
-        applicant_fl = [json_util.dumps(fl) for fl in list(applicant_fl["FOREIGN_LANGUAGE"])]
+        print(applicant_fl)
+        applicant_fl = [json_util.dumps(fl) for fl in list(applicant_fl.get("FOREIGN_LANGUAGE", []))]
         if applicant_fl:
             return Response(
                 response=json.dumps({"message":"Applicant foreign language found",
@@ -702,10 +703,8 @@ def _delete_appl_user(user_id):
 def _create_skill():
     try:
         skill = skill_info(request)
-        count = db.users.find({},{"SKILL": 1})
-        count = [json_util.dumps(count) for count in list(count)]
-        count = len(count)
-        skill['id'] = count+1
+        
+        skill['id'] = str(time.mktime(datetime.now().timetuple()))[:-2]
         applicant_id = skill['APPLICANTID']
         db.users.update_one({'APPLICANTID':applicant_id}, {"$push": {"SKILL": skill}})
         return Response(
@@ -750,33 +749,35 @@ def _get_skill(applicant_id):
             status=500
         )
 
-# @app.route("/skills/<applicant_id>", methods = ["GET"])
-# def _get_skill(applicant_id):
-#     try:
-#         skills = db.users.find_one({"APPLICANTID": applicant_id}, {"SKILL": 1})
-        
-#         skills = [json_util.dumps(skill) for skill in list(skills["SKILL"])]
-#         print(skills)
-#         if skills:
-#             return Response(
-#                 response=json.dumps({"message":"Skill found",
-#                 "skill": skills}),
-#                 status=200
-#             )
-#         else:
-#             return Response(
-#                 response=json.dumps({"message":"Skill not found",
-#                 "skill": "False"}),
-#                 status=200
-#             )
-#     except Exception as e:
-#         print('********')
-#         print(e)
-#         print('********')
-#         return Response(
-#             response=json.dumps({"message":"Error getting skill"}),
-#             status=500
-#         )
+@app.route("/skills_id/<skill_id>", methods = ["GET"])
+def _get_skill_id(skill_id):
+    try:
+        skills = db.users.find_one({"SKILL.id": skill_id}, {"SKILL":1})
+        print(skills)
+        skill = ''
+        for s in skills.get("SKILL",[]):
+            if s.get("id") == skill_id:
+                skill = s
+        if skill:
+            return Response(
+                response=json.dumps({"message":"Skill found",
+                "skill": json_util.dumps(skill)}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Skill not found",
+                "skill": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error getting skill"}),
+            status=500
+        )
 
 
 @app.route("/skills/<skill_id>", methods = ["PUT"])

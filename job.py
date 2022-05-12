@@ -37,8 +37,8 @@ def _get_all_job():
             for j in job["JOB"]:
                 j["COMPANYNAME"] = job["COMPANYNAME"]
                 j_list.append(j)
-            jobs_list.append(j_list)
-        # print(jobs_list)
+            jobs_list.extend(j_list)
+        print(jobs_list)
         jobs_list = [json_util.dumps(job) for job in list(jobs_list)]
         return Response(
             response=json.dumps({"message":"Jobs retrieved successfully",

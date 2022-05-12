@@ -40,11 +40,11 @@ def _get(id):
             status=500
         )
 
-@app.route("/applicant", methods = ["GET"])
+@app.route("/company", methods = ["GET"])
 def _get_all_company():
     try:
         companies = db.companies.find()
-        companies = [json_util.dumps(companies) for applicant in list(companies)]
+        companies = [json_util.dumps(company) for company in list(companies)]
         print(companies)
         return Response(
             response=json.dumps({"message":"Companies retrieved successfully",

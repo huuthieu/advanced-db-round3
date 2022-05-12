@@ -183,4 +183,5 @@ def skill_info(request):
         "desc_skill": request.form.get("desc_skill", False),
         "level": request.form.get("level", False)
     }
+    return data
     

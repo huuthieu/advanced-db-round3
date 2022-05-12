@@ -114,7 +114,7 @@ def _create_applicant_lv():
 def _get_applicant_lv(applicant_id):
     try:
         applicant_lv = db.users.find_one({"APPLICANTID": applicant_id}, {"LEVEL_LEARN": 1})
-        applicant_lv = [json_util.dumps(lv) for lv in list(applicant_lv["LEVEL_LEARN"])]
+        applicant_lv = [json_util.dumps(lv) for lv in list(applicant_lv.get("LEVEL_LEARN",[]))]
         if applicant_lv:
             return Response(
                 response=json.dumps({"message":"Applicant level learn found",
@@ -202,7 +202,7 @@ def _create_applicant_pj():
 def _get_applicant_pj(applicant_id):
     try:
         applicant_pj = db.users.find_one({"APPLICANTID": applicant_id}, {"PREFER_JOB": 1})
-        applicant_pj = [json_util.dumps(pj) for pj in list(applicant_pj["PREFER_JOB"])]
+        applicant_pj = [json_util.dumps(pj) for pj in list(applicant_pj.get("PREFER_JOB",[]))]
         if applicant_pj:
             return Response(
                 response=json.dumps({"message":"Applicant prefer job found",
@@ -289,7 +289,7 @@ def _create_applicant_cv():
 def _get_applicant_cv(applicant_id):
     try:
         applicant_cv = db.users.find_one({"APPLICANTID": applicant_id}, {"CV": 1})
-        applicant_cv = [json_util.dumps(cv) for cv in list(applicant_cv["CV"])]
+        applicant_cv = [json_util.dumps(cv) for cv in list(applicant_cv.get("CV",[]))]
         if applicant_cv:
             return Response(
                 response=json.dumps({"message":"Applicant cv found",
@@ -377,7 +377,7 @@ def _create_applicant_attachmentfile():
 def _get_applicant_attachmentfile(applicant_id):
     try:
         applicant_attachmentfile = db.users.find_one({"APPLICANTID": applicant_id}, {"ATTACHMENTFILE": 1})
-        applicant_attachmentfile = [json_util.dumps(attachmentfile) for attachmentfile in list(applicant_attachmentfile["ATTACHMENTFILE"])]
+        applicant_attachmentfile = [json_util.dumps(attachmentfile) for attachmentfile in list(applicant_attachmentfile.get("ATTACHMENTFILE",[]))]
         if applicant_attachmentfile:
             return Response(
                 response=json.dumps({"message":"Applicant attachmentfile found",
@@ -465,7 +465,7 @@ def _create_category():
 def _get_category(applicant_id):
     try:
         category = db.users.find_one({"APPLICANTID": applicant_id}, {"CATEGORY": 1})
-        category = [json_util.dumps(category) for category in list(category["CATEGORY"])]
+        category = [json_util.dumps(category) for category in list(category.get("CATEGORY",[]))]
         if category:    
             return Response(
                 response=json.dumps({"message":"Category found",
@@ -551,7 +551,7 @@ def _create_jobregistration():
 def _get_jobregistration(applicant_id):
     try:
         jobregistration = db.users.find_one({"APPLICANTID": applicant_id}, {"JOBREGISTRATION": 1})
-        jobregistration = [json_util.dumps(jobregistration) for jobregistration in list(jobregistration["JOBREGISTRATION"])]
+        jobregistration = [json_util.dumps(jobregistration) for jobregistration in list(jobregistration.get("JOBREGISTRATION",[]))]
         if jobregistration:
             return Response(
                 response=json.dumps({"message":"Jobregistration found",
@@ -637,7 +637,7 @@ def _create_appl_user():
 def _get_appl_user(applicant_id):
     try:
         user = db.users.find_one({"APPLICANTID": applicant_id}, {"USER": 1})
-        user = [json_util.dumps(user) for user in list(user["USER"])]
+        user = [json_util.dumps(user) for user in list(user.get("USER",[]))]
         if user:
             return Response(
                 response=json.dumps({"message":"User found",
@@ -726,7 +726,7 @@ def _get_skill(applicant_id):
     try:
         skills = db.users.find_one({"APPLICANTID": applicant_id}, {"SKILL": 1})
         
-        skills = [json_util.dumps(skill) for skill in list(skills["SKILL"])]
+        skills = [json_util.dumps(skill) for skill in list(skills.get("SKILL",[]))]
         print(skills)
         if skills:
             return Response(

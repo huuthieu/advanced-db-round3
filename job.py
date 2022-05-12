@@ -27,13 +27,16 @@ def _create_job():
 def _get_all_job():
     try:
     # if True:
+        jobs_list = []
         jobs = db.companies.find({},{"JOB":1})
         jobs = [job for job in jobs if job.get("JOB") != [] and job.get("JOB") != None]
-        jobs = [json_util.dumps(job) for job in list(jobs)]
-        print(jobs)
+        for job in jobs:
+            jobs_list.extend(job["JOB"])
+        # print(jobs_list)
+        jobs_list = [json_util.dumps(job) for job in list(jobs_list)]
         return Response(
             response=json.dumps({"message":"Jobs retrieved successfully",
-            "jobs":jobs}),
+            "jobs":jobs_list}),
             status=200
         )
     except Exception as e:

@@ -48,6 +48,36 @@ def _get_applicant_fl(applicant_id):
             status=500
         )
 
+@app.route("/applicant_foreign_language_id/<fl_id>", methods = ["GET"])
+def _get_applicant_fl_id(fl_id):
+    try:
+        applicant_fls = db.users.find_one({"FOREIGN_LANGUAGE.id": fl_id}, {"FOREIGN_LANGUAGE.$": 1})
+        applicant_fl = ''
+        for fl in applicant_fls.get("FOREIGN_LANGUAGE", []):
+            if fl.get("id") == fl_id:
+                applicant_fl = fl
+                break
+        if applicant_fl:
+            return Response(
+                response=json.dumps({"message":"Applicant foreign language found",
+                "applicant_fl": json_util.dumps(applicant_fl)}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Applicant foreign language not found",
+                "applicant_fl": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error getting applicant foreign language"}),
+            status=500
+        )
+
 @app.route("/applicant_foreign_language/<fl_id>", methods = ["PUT"])
 def _update_applicant_fl(fl_id):
     try:
@@ -136,6 +166,37 @@ def _get_applicant_lv(applicant_id):
             status=500
         )
 
+@app.route("/applicant_level_learn_id/<lv_id>", methods = ["GET"])
+def _get_applicant_lv_id(lv_id):
+    try:
+        applicant_lvs = db.users.find_one({"LEVEL_LEARN.id": lv_id}, {"LEVEL_LEARN": 1})
+        applicant_lv = ''
+        for lv in applicant_lvs.get("LEVEL_LEARN", []):
+            if lv.get("id") == lv_id:
+                applicant_lv = lv
+                break
+        if applicant_lv:
+            return Response(
+                response=json.dumps({"message":"Applicant level learn found",
+                "applicant_lv": json_util.dumps(applicant_lv)}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Applicant level learn not found",
+                "applicant_lv": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error getting applicant level learn"}),
+            status=500
+        )
+
+
 @app.route("/applicant_level_learn/<lv_id>", methods = ["PUT"])
 def _update_applicant_lv(lv_id):
     try:
@@ -203,6 +264,36 @@ def _get_applicant_pj(applicant_id):
     try:
         applicant_pj = db.users.find_one({"APPLICANTID": applicant_id}, {"PREFER_JOB": 1})
         applicant_pj = [json_util.dumps(pj) for pj in list(applicant_pj.get("PREFER_JOB",[]))]
+        if applicant_pj:
+            return Response(
+                response=json.dumps({"message":"Applicant prefer job found",
+                "applicant_pj": applicant_pj}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Applicant prefer job not found",
+                "applicant_pj": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error getting applicant prefer job"}),
+            status=500
+        )
+
+@app.route("/applicant_prefer_job_id/<pj_id>", methods = ["GET"])
+def _get_applicant_pj_id(pj_id):
+    try:
+        applicant_pjs = db.users.find_one({"PREFER_JOB.id": pj_id}, {"PREFER_JOB": 1})
+        applicant_pj  = ''
+        for pj in applicant_pjs.get("PREFER_JOB",[]):
+            if pj.get("id") == pj_id:
+                applicant_pj = json_util.dumps(pj)
+                break
         if applicant_pj:
             return Response(
                 response=json.dumps({"message":"Applicant prefer job found",
@@ -312,6 +403,35 @@ def _get_applicant_cv(applicant_id):
             status=500
         )
 
+@app.route("/applicant_cv_id/<cv_id>", methods = ["GET"])
+def _get_applicant_cv_id(cv_id):
+    try:
+        applicant_cv = db.users.find_one({"CV.id": cv_id}, {"CV": 1})
+        app_cv = ''
+        for cv in applicant_cv.get("CV",[]):
+            if cv.get('id') == cv_id:
+                app_cv = cv
+        if app_cv:
+            return Response(
+                response=json.dumps({"message":"Applicant cv found",
+                "applicant_cv": json_util.dumps(app_cv)}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Applicant cv not found",
+                "applicant_cv": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error getting applicant cv"}),
+            status=500
+        )
+
 @app.route("/applicant_cv/<cv_id>", methods = ["PUT"])
 def _update_applicant_cv(cv_id):
     try:
@@ -400,6 +520,36 @@ def _get_applicant_attachmentfile(applicant_id):
             status=500
         )
 
+@app.route("/applicant_attachmentfile_id/<attach_id>", methods = ["GET"])
+def _get_applicant_attachmentfile_id(attach_id):
+    try:
+        attachmentfiles = db.users.find_one({"ATTACHMENTFILE.FIELDID": attach_id}, {"ATTACHMENTFILE":1})
+        attachmentfile = ''
+        for att in attachmentfiles.get("ATTACHMENTFILE",[]):
+            if att.get("FIELDID") == attach_id:
+                attachmentfile = att
+        if attachmentfile:
+            return Response(
+                response=json.dumps({"message":"Attachmentfile found",
+                "attachmentfile": json_util.dumps(attachmentfile)}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Attachmentfile not found",
+                "attachmentfile": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error getting attachmentfile"}),
+            status=500
+        )
+
+
 @app.route("/applicant_attachmentfile/<attachmentfile_id>", methods = ["PUT"])
 def _update_applicant_attachmentfile(attachmentfile_id):
     try:
@@ -486,6 +636,37 @@ def _get_category(applicant_id):
             response=json.dumps({"message":"Error getting category"}),
             status=500
         )
+
+@app.route("/category_id/<category_id>", methods = ["GET"])
+def _get_category_id(category_id):
+    try:
+        categories = db.users.find_one({"CATEGORY.id": category_id}, {"CATEGORY":1})
+        category = ''
+        for cat in categories.get("CATEGORY",[]):
+            if cat.get("CATEGORYID") == category_id:
+                category = cat
+                break
+        if category:
+            return Response(
+                response=json.dumps({"message":"Category found",
+                "category": json_util.dumps(category)}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Category not found",
+                "category": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error getting category"}),
+            status=500
+        )
+
 
 @app.route("/category/<category_id>", methods = ["PUT"])
 def _update_category(category_id):
@@ -658,6 +839,37 @@ def _get_appl_user(applicant_id):
             response=json.dumps({"message":"Error getting user"}),
             status=500
         )
+
+@app.route("/users_id/<user_id>", methods = ["GET"])
+def _get_user_id(user_id):
+    try:
+        users = db.users.find_one({"USER.USERID": user_id}, {"USER": 1})
+        user = ''
+        for u in users.get("USER",[]):
+            if u.get('id') == user_id:
+                user = u
+                break
+        if user:
+            return Response(
+                response=json.dumps({"message":"User found",
+                "user": json_util.dumps(user)}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"User not found",
+                "user": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('********')
+        print(e)
+        print('********')
+        return Response(
+            response=json.dumps({"message":"Error getting user"}),
+            status=500
+        )
+        
 
 @app.route("/users/<user_id>", methods = ["PUT"])
 def _update_appl_user(user_id):
@@ -869,6 +1081,40 @@ def _get_applicant_we(applicant_id):
             response=json.dumps({"message":"Error getting applicant work experience !"}),
             status=500
         )
+
+@app.route("/applicant_work_experience_id/<we_id>", methods = ["GET"])
+def _get_applicant_we_id(we_id):
+    try:
+        applicant_wes = db.users.find_one({"WORK_EXPERIENCE".id: we_id}, {"WORK_EXPERIENCE": 1})
+        applicant_we = ''
+        for we in applicant_wes.get("WORK_EXPERIENCE",[]):
+            if we.get("id") == we_id:
+                applicant_we = we
+                break
+
+        if applicant_we:
+            return Response(
+                response=json.dumps({"message":"Applicant work experience found",
+                "applicant_we": json_util.dumps(applicant_we)}),
+                status=200
+            )
+        else:
+            return Response(
+                response=json.dumps({"message":"Applicant work experience not found",
+                "applicant_we": "False"}),
+                status=200
+            )
+    except Exception as e:
+        print('******')
+        print(e)
+        print('******')
+        return Response(
+            response=json.dumps({"message":"Error getting applicant work experience !"}),
+            status=500
+        )
+
+
+
 
 @app.route("/applicant_work_experience/<we_id>", methods = ["PUT"])
 def _update_applicant_we(we_id):
